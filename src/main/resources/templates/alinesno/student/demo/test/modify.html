@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head th:replace="dashboard/header :: header"></head>
+<body>
+
+<!--
+@desc  更新
+@author ${author}
+@since 2021-03-01 16:58:37
+-->
+
+	<div layout:fragment="content">
+		<div class="container-fluid content-main">
+			<div class="animated fadeIn">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="card">
+							<div class="card-body">
+
+								<form class="form-horizontal" id="modifyForm">
+
+									<input type="hidden" name="id" th:value="${bean.id}" />
+									
+<div class="form-group row">
+	<label class="col-md-2 col-form-label control-label" for="text-input">name </label>
+	<div class="col-md-9">
+				<input class="form-control" id="name" type="text" th:value="${ bean.name}" name="name" placeholder="">
+			</div>
+</div>
+																										</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="dashboard/footer :: footer"></footer>
+
+	<script type="text/javascript">
+		var modifyForm = $("#modifyForm") ; 
+		$(function(){
+			addForm.validate({
+				ignore: [],  
+				rules: {
+name: {required:true}
+				}
+			});
+		}) ;
+
+		function submitHandler() {
+			var result = $.validate.form("modifyForm");
+			if(result){	
+				var modifyUrl = ctx+"alinesno/student/demo/test/update" ;
+				$.operate.save(modifyUrl , modifyForm.serialize());
+			}
+	    }
+	</script>
+</body>
+</html>

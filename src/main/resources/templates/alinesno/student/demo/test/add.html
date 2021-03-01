@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head th:replace="dashboard/header :: header"></head>
+<body>
+
+<!--
+@desc  添加
+@author ${author}
+@since 2021-03-01 16:58:37
+-->
+	<div layout:fragment="content">
+		<div class="container-fluid content-main">
+			<div class="animated fadeIn">
+				<div class="row">
+					<!-- /.col-->
+					<div class="col-sm-12">
+						<div class="card">
+							<div class="card-body">
+								<form class="form-horizontal" id="addForm">
+<div class="form-group row">
+	<label class="col-md-2 col-form-label control-label" for="text-input">name</label>
+	<div class="col-md-9">
+				<input class="form-control" id="name" type="text" name="name" placeholder="">
+			</div>
+</div>
+																									</form>
+							</div>
+						</div>
+					</div>
+					<!-- /.col-->
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<footer th:replace="dashboard/footer :: footer"></footer>
+
+	<script type="text/javascript">
+		var addForm = $("#addForm") ; 
+		$(function(){
+			addForm.validate({
+				ignore: [],  
+				rules: {
+name: {required:true}
+				}
+			});
+		}) ;
+
+		function submitHandler() {
+			var result = $.validate.form("addForm");
+			if(result){	
+				var saveUrl = ctx+"alinesno/student/demo/test/save" ;
+				$.operate.save(saveUrl , addForm.serialize());
+			}
+	    }
+	</script>
+
+</body>
+</html>
+
+

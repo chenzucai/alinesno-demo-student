@@ -1,0 +1,19 @@
+server:
+  port: 8080 
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: alinesno-student-demo
+  datasource:
+    url: jdbc:mysql://47.113.116.150:3306/cenzc_stu_test?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&serverTimezone=GMT
+    username: chenzc
+    password: 1234qwer
+  devtools:
+    restart:
+      enabled: false 
+# 此影响开发效率，本地启动redis，打开即可
+#  redis:
+#    host: localhost
+#    port: 6379
+#    password:   

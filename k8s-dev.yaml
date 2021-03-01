@@ -1,0 +1,109 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: dev-alinesno-student-demo
+  labels:
+    app: dev-alinesno-student-demo
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: dev-alinesno-student-demo
+  template:
+    metadata:
+      labels:
+        app: dev-alinesno-student-demo
+    spec:
+      containers:
+      - name: dev-alinesno-student-demo
+        image: registry-vpc.cn-shenzhen.aliyuncs.com/alinesno-cloud/alinesno-student-demo:1.0.0-SNAPSHOT
+        resources:
+          limits:
+            cpu: 710m
+            memory: 2048Mi
+          requests:
+            cpu: 200m
+            memory: 1024Mi
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+          - name: SPRING_APPLICATION_NAME
+            value: 'alinesno-student-demo'
+          - name: SERVER_PORT
+            value: '8080'
+          - name: REGISTER_ADDRESS
+            value: 'zookeeper://dev-zookeeper:2181/'
+          - name: REDIS_HOST
+            value: 'dev-redis'
+          - name: REDIS_PORT
+            value: '6379'
+          - name: REDIS_PASSWORD
+            value: '2njv2EIXmLj5DjdH'
+          - name: DATASOURCE_URL
+            value: 'jdbc:mysql://dev-mysql:3306/cenzc_stu_test?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&serverTimezone=GMT'
+          - name: DATASOURCE_HOST
+            value: 'dev-mysql:3306'
+          - name: DATASOURCE_DATABASE
+            value: 'cenzc_stu_test'
+          - name: DATASOURCE_USERNAME
+            value: 'chenzc'
+          - name: DATASOURCE_PASSWORD
+            value: '1234qwer'
+          - name: SPRING_BOOT_ADMIN_URL
+            value: http://operation-alinesno-cloud-platform-admin:24003
+          - name: SPRING_BOOT_ADMIN_USERNAME
+            value: admin
+          - name: SPRING_BOOT_ADMIN_PASSWORD
+            value: admin
+          - name: MANAGEMENT_BASE_URL
+            value: http://dev-alinesno-student-demo:8080
+          - name: JAVA_TOOL_OPTIONS
+            value: '-Xms128m -Xmx512m -Dspring.profiles.active=hub'
+          - name: CDN
+            value: 'http://static.cloud.linesno.com' 
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 45
+        imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-alinesno-student-demo
+  namespace: default
+  labels:
+    app: dev-alinesno-student-demo
+spec:
+  ports:
+    - name: tcp-8080
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: dev-alinesno-student-demo
+  type: ClusterIP
+ 
+# 如需nodePort，则自行配置  
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: dev-alinesno-student-demo
+#   namespace: default
+#   labels:
+#     app: dev-alinesno-student-demo
+# spec:
+#   ports:
+#     - name: tcp-8080
+#       protocol: TCP
+#       port: 8080
+#       targetPort: 8080
+#       nodePort: 8080
+#   selector:
+#     app: dev-alinesno-student-demo

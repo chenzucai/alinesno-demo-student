@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head th:replace="dashboard/header :: header"></head>
+<body class="gray-bg">
+
+<!--
+@desc  管理
+@author ${author}
+@since 2021-03-01 16:58:37
+-->
+
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="operlog-form">
+					<div class="select-list">
+						<ul>
+		<li><label> name </label><input type="text" name="condition[name|like]"/></li>
+						<li>
+							<a class="btn btn-success btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+							<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+						</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+
+			<div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()">
+	                <i class="fa fa-plus"></i> 新增
+	            </a>
+	            <a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()">
+		            <i class="fa fa-edit"></i> 修改
+		        </a>
+				<a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()">
+		            <i class="far fa-trash-alt"></i> 删除
+		        </a>
+		        <!--
+		        <a class="btn btn-danger" onclick="$.operate.clean()">
+	                <i class="fa fa-trash"></i> 清空
+	            </a>
+	            -->
+	            <a class="btn btn-warning" onclick="$.table.exportExcel()">
+		            <i class="fa fa-download"></i> 导出
+		        </a>
+	        </div>
+
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<footer th:replace="dashboard/footer :: footer"></footer>
+
+	<script>
+		var prefix = ctx + "alinesno/student/demo/test/" ;
+
+		$(function() {
+		    var options = {
+		        url: prefix +"datatables" ,
+		        createUrl: prefix + 'add' ,
+		        updateUrl: prefix +"modify?id={id}" ,
+		        statusUrl: prefix +"changeStatus?id={id}" ,
+		        cleanUrl: prefix + "clean",
+		        detailUrl: prefix +"detail?id={id}",
+		        removeUrl: prefix + "delete" ,
+		        exportUrl: prefix + "exportExcel",
+		        sortName: "operTime",
+		        uniqueId:"id" ,
+		        sortOrder: "desc",
+                modalName: "",
+		        escape: true,
+		        showPageGo: true,
+		        rememberSelected: true,
+		        columns: [{field: 'state',checkbox: true },
+
+			{field: 'name', title: 'name'},
+				    {field: 'hasStatusLabel', title: '状态', align: 'center',  formatter:function(value,row,index){ return $.table.status(value , row);}},
+			        {field: 'addTime', title: '添加时间', align:'center' , width:'150px', sortable: true},
+			        {field: 'id' , title: '操作', align: 'center', width:'200px', formatter: function(value, row, index) {
+			                var actions = [];
+
+			                actions.push('<a class="btn btn-success btn-xs" href="javascript:void(0)" onclick="$.operate.detail(\'' + row.id + '\')"><i class="fa fa-edit"></i> 详情</a> ');
+			                actions.push('<a class="btn btn-success btn-xs" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i> 编辑</a> ');
+			                actions.push('<a class="btn btn-danger btn-xs" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="far fa-trash-alt"></i> 删除</a> ');
+
+			                return actions.join('');
+			          }
+			     }]
+		    };
+		    $.table.init(options);
+		});
+
+	</script>
+</body>
+</html>
+
